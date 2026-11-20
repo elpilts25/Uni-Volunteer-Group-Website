@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-    Alert, Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Alert, Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText,
     Divider, IconButton, Paper, TextField, Tooltip, Typography,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -16,6 +16,10 @@ import { translate, useTranslations } from '../i18n/i18n';
 import { cardSx } from '../theme';
 import { hasRole } from '../utils/roles';
 import timeAgo from '../utils/timeAgo';
+import { looksLikeHtml, sanitizeHtml, toEditorHtml } from '../utils/richText';
+import { DialogField, DialogHeader } from './DialogParts';
+import ReactionBar from './ReactionBar';
+import RichTextEditor from './RichTextEditor';
 
 const URL_PATTERN = /(https?:\/\/[^\s<]+)/g;
 
@@ -26,7 +30,7 @@ function Linkified({ text }) {
         : part));
 }
 
-function Message({ author, createdAt, content, label, onEdit, onDelete }) {
+function Message({ author, createdAt, content, label, reactions, onReact, onEdit, onDelete }) {
     const { t: tc } = useTranslations('common');
     return (
         <Paper elevation={0} sx={{ ...cardSx, overflow: 'hidden' }}>
@@ -54,9 +58,18 @@ function Message({ author, createdAt, content, label, onEdit, onDelete }) {
                 )}
             </Box>
             <Divider sx={{ borderColor: 'var(--outline)' }} />
-            <Typography sx={{ p: 3, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
-                <Linkified text={content} />
-            </Typography>
+            {looksLikeHtml(content) ? (
+                <Box
+                    className="rich-text" sx={{ p: 3 }}
+                    // Sanitized to a small tag allow-list; the backend sanitizes on save as well.
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
+                />
+            ) : (
+                <Typography sx={{ p: 3, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                    <Linkified text={content} />
+                </Typography>
+            )}
+            <ReactionBar reactions={reactions} onToggle={onReact} />
         </Paper>
     );
 }
@@ -67,12 +80,16 @@ function EditDialog({ target, onClose, onSaved }) {
     const { t: tn } = useTranslations('newTopicDialog');
     const { t: tc } = useTranslations('common');
     const [title, setTitle] = useState(target.title);
-    const [content, setContent] = useState(target.content);
+    const [content, setContent] = useState(toEditorHtml(target.content));
     const [error, setError] = useState('');
     const isTopic = target.type === 'topic';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!content) {
+            setError(tn('contentRequired'));
+            return;
+        }
         try {
             if (isTopic) {
                 await api.put(`/topics/${target.id}`, { title, content });
@@ -86,23 +103,27 @@ function EditDialog({ target, onClose, onSaved }) {
     };
 
     return (
-        <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open onClose={onClose} maxWidth="md" fullWidth>
             <Box component="form" onSubmit={handleSubmit}>
-                <DialogTitle>{isTopic ? t('editTopicTitle') : t('editReplyTitle')}</DialogTitle>
-                <DialogContent sx={{ display: 'grid', gap: 2, pt: '8px !important' }}>
+                <DialogHeader title={isTopic ? t('editTopicTitle') : t('editReplyTitle')} onClose={onClose} />
+                <DialogContent sx={{ display: 'grid', gap: 2.5, pt: '8px !important' }}>
                     {isTopic && (
-                        <TextField
-                            label={tn('topicTitle')} required fullWidth value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
+                        <DialogField label={tn('topicTitle')} id="edit-title">
+                            <TextField
+                                id="edit-title" required fullWidth value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
+                        </DialogField>
                     )}
-                    <TextField
-                        label={tn('message')} required fullWidth multiline minRows={4} autoFocus value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    />
+                    <DialogField label={tn('message')} id="edit-content">
+                        <RichTextEditor
+                            value={content} onChange={setContent} autoFocus minHeight={isTopic ? 200 : 120}
+                            ariaLabel={tn('message')} placeholder={tn('messagePlaceholder')}
+                        />
+                    </DialogField>
                     {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions>
                     <Button onClick={onClose} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
                     <Button type="submit" variant="contained" sx={{ textTransform: 'none' }}>{tc('save')}</Button>
                 </DialogActions>
@@ -120,6 +141,7 @@ function TopicPage() {
     const isAdmin = hasRole(['ROLE_ADMIN']);
     const [topic, setTopic] = useState(null);
     const [reply, setReply] = useState('');
+    const [replyKey, setReplyKey] = useState(0); // remounts the reply editor to clear it
     const [error, setError] = useState('');
     const [editing, setEditing] = useState(null); // { type, id, title?, content }
     const [deleting, setDeleting] = useState(null); // { type, id }
@@ -143,13 +165,29 @@ function TopicPage() {
 
     const reload = () => setVersion((v) => v + 1);
     const canManage = (author) => isAdmin || author === username;
-    const displayName = (author) => (author === username ? tc('you') : author);
+
+    // `kind` is the API collection: 'topics' or 'posts'.
+    const toggleReaction = async (kind, targetId, emoji) => {
+        try {
+            const res = await api.post(`/${kind}/${targetId}/reactions`, { emoji });
+            setTopic((cur) => (kind === 'topics'
+                ? { ...cur, reactions: res.data }
+                : { ...cur, posts: cur.posts.map((p) => (p.id === targetId ? { ...p, reactions: res.data } : p)) }));
+        } catch (err) {
+            setError(err.response?.data?.error ?? t('reactionError'));
+        }
+    };
 
     const handleReply = async (e) => {
         e.preventDefault();
+        if (!reply) {
+            setError(translate('newTopicDialog.contentRequired'));
+            return;
+        }
         try {
             await api.post(`/topics/${id}/posts`, { content: reply });
             setReply('');
+            setReplyKey((k) => k + 1);
             reload();
         } catch (err) {
             setError(err.response?.data?.error ?? t('sendError'));
@@ -196,8 +234,9 @@ function TopicPage() {
             {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
 
             <Message
-                author={displayName(topic.author)} createdAt={topic.createdAt} content={topic.content}
-                label={t('initialPost')}
+                author={topic.author} createdAt={topic.createdAt} content={topic.content}
+                label={t('initialPost')} reactions={topic.reactions}
+                onReact={(emoji) => toggleReaction('topics', topic.id, emoji)}
                 onEdit={canManage(topic.author)
                     ? () => setEditing({ type: 'topic', id: topic.id, title: topic.title, content: topic.content })
                     : undefined}
@@ -214,7 +253,9 @@ function TopicPage() {
 
             {topic.posts.map((post) => (
                 <Message
-                    key={post.id} author={displayName(post.author)} createdAt={post.createdAt} content={post.content}
+                    key={post.id} author={post.author} createdAt={post.createdAt} content={post.content}
+                    reactions={post.reactions}
+                    onReact={(emoji) => toggleReaction('posts', post.id, emoji)}
                     onEdit={canManage(post.author)
                         ? () => setEditing({ type: 'post', id: post.id, content: post.content })
                         : undefined}
@@ -224,9 +265,9 @@ function TopicPage() {
 
             <Paper elevation={0} component="form" onSubmit={handleReply} sx={{ ...cardSx, p: 2.5, display: 'grid', gap: 2 }}>
                 <Typography fontWeight="bold">{t('writeReply')}</Typography>
-                <TextField
-                    required fullWidth multiline minRows={3} placeholder={t('replyPlaceholder')}
-                    value={reply} onChange={(e) => setReply(e.target.value)}
+                <RichTextEditor
+                    key={replyKey} value="" onChange={setReply} minHeight={120}
+                    ariaLabel={t('writeReply')} placeholder={t('replyPlaceholder')}
                 />
                 <Button
                     type="submit" variant="contained" startIcon={<SendOutlined />}
@@ -245,15 +286,16 @@ function TopicPage() {
             )}
 
             <Dialog open={Boolean(deleting)} onClose={() => setDeleting(null)} maxWidth="xs" fullWidth>
-                <DialogTitle>
-                    {deleting?.type === 'topic' ? t('deleteTopicTitle') : t('deleteReplyTitle')}
-                </DialogTitle>
+                <DialogHeader
+                    title={deleting?.type === 'topic' ? t('deleteTopicTitle') : t('deleteReplyTitle')}
+                    onClose={() => setDeleting(null)}
+                />
                 <DialogContent>
                     <DialogContentText>
                         {deleting?.type === 'topic' ? t('deleteTopicConfirm') : t('deleteReplyConfirm')}
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions>
                     <Button onClick={() => setDeleting(null)} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
                     <Button color="error" variant="contained" onClick={handleDelete} sx={{ textTransform: 'none' }}>
                         {tc('delete')}

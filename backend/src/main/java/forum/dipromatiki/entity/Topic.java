@@ -16,7 +16,8 @@ public class Topic {
     @Column(nullable = false, length = 150)
     private String title;
 
-    @Column(nullable = false, length = 5000)
+    // Roomy because formatted posts are stored as HTML.
+    @Column(nullable = false, length = 30000)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -11,7 +11,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 5000)
+    // Roomy because formatted replies are stored as HTML.
+    @Column(nullable = false, length = 30000)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

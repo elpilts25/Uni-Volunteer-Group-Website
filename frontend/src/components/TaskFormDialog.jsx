@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField,
+    Alert, Box, Button, Dialog, DialogActions, DialogContent, MenuItem, TextField,
 } from '@mui/material';
 import api from '../axiosConfig';
 import { useTranslations } from '../i18n/i18n';
 import { TaskShape } from '../lib/interfaces';
 import { PRIORITIES, TEAMS } from '../utils/taskMeta';
+import { DialogField, DialogHeader } from './DialogParts';
 
 // Create (task === null) or edit a task; remount with a new `key` to reset the form.
 function TaskFormDialog({ task, onClose, onSaved }) {
@@ -46,40 +47,54 @@ function TaskFormDialog({ task, onClose, onSaved }) {
     return (
         <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
             <Box component="form" onSubmit={handleSubmit}>
-                <DialogTitle>{task ? t('editTitle') : t('newTitle')}</DialogTitle>
-                <DialogContent sx={{ display: 'grid', gap: 2, pt: '8px !important' }}>
-                    <TextField
-                        label={t('title')} name="title" required autoFocus fullWidth
-                        value={form.title} onChange={handleChange}
-                    />
-                    <TextField
-                        label={t('description')} name="description" fullWidth multiline minRows={3}
-                        value={form.description} onChange={handleChange}
-                    />
-                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' } }}>
-                        <TextField select label={t('team')} name="team" value={form.team} onChange={handleChange}>
-                            {Object.keys(TEAMS).map((key) => (
-                                <MenuItem key={key} value={key}>{tm(`teams.${key}`)}</MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField select label={t('priority')} name="priority" value={form.priority} onChange={handleChange}>
-                            {Object.keys(PRIORITIES).map((key) => (
-                                <MenuItem key={key} value={key}>{tm(`priorities.${key}`)}</MenuItem>
-                            ))}
-                        </TextField>
+                <DialogHeader title={task ? t('editTitle') : t('newTitle')} onClose={onClose} />
+                <DialogContent sx={{ display: 'grid', gap: 2.5, pt: '8px !important' }}>
+                    <DialogField label={t('title')} id="task-title">
                         <TextField
-                            label={t('dueDate')} name="dueDate" type="date"
-                            value={form.dueDate} onChange={handleChange}
-                            slotProps={{ inputLabel: { shrink: true } }}
+                            id="task-title" name="title" required autoFocus fullWidth
+                            value={form.title} onChange={handleChange}
                         />
+                    </DialogField>
+                    <DialogField label={t('description')} id="task-description">
+                        <TextField
+                            id="task-description" name="description" fullWidth multiline minRows={3}
+                            value={form.description} onChange={handleChange}
+                        />
+                    </DialogField>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' } }}>
+                        <DialogField label={t('team')} id="task-team">
+                            <TextField select id="task-team" name="team" fullWidth value={form.team} onChange={handleChange}>
+                                {Object.keys(TEAMS).map((key) => (
+                                    <MenuItem key={key} value={key}>{tm(`teams.${key}`)}</MenuItem>
+                                ))}
+                            </TextField>
+                        </DialogField>
+                        <DialogField label={t('priority')} id="task-priority">
+                            <TextField
+                                select id="task-priority" name="priority" fullWidth
+                                value={form.priority} onChange={handleChange}
+                            >
+                                {Object.keys(PRIORITIES).map((key) => (
+                                    <MenuItem key={key} value={key}>{tm(`priorities.${key}`)}</MenuItem>
+                                ))}
+                            </TextField>
+                        </DialogField>
+                        <DialogField label={t('dueDate')} id="task-due-date">
+                            <TextField
+                                id="task-due-date" name="dueDate" type="date" fullWidth
+                                value={form.dueDate} onChange={handleChange}
+                            />
+                        </DialogField>
                     </Box>
-                    <TextField
-                        label={t('criteria')} name="criteria" fullWidth multiline minRows={3}
-                        value={form.criteria} onChange={handleChange}
-                    />
+                    <DialogField label={t('criteria')} id="task-criteria">
+                        <TextField
+                            id="task-criteria" name="criteria" fullWidth multiline minRows={3}
+                            value={form.criteria} onChange={handleChange}
+                        />
+                    </DialogField>
                     {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions>
                     <Button onClick={onClose} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
                     <Button type="submit" variant="contained" sx={{ textTransform: 'none' }}>{tc('save')}</Button>
                 </DialogActions>

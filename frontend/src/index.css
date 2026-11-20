@@ -131,3 +131,100 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Formatted post content: shared by the editor and the rendered post. */
+.rich-text,
+.rich-editor .ProseMirror {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.rich-editor .ProseMirror {
+  min-height: var(--editor-min-height, 240px);
+  padding: 14px 16px;
+  outline: none;
+}
+
+.rich-text > :first-child,
+.rich-editor .ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.rich-text > :last-child,
+.rich-editor .ProseMirror > :last-child {
+  margin-bottom: 0;
+}
+
+.rich-text p,
+.rich-text ul,
+.rich-text ol,
+.rich-text blockquote,
+.rich-text pre,
+.rich-editor .ProseMirror p,
+.rich-editor .ProseMirror ul,
+.rich-editor .ProseMirror ol,
+.rich-editor .ProseMirror blockquote,
+.rich-editor .ProseMirror pre {
+  margin: 0 0 0.75em;
+}
+
+.rich-text ul,
+.rich-text ol,
+.rich-editor .ProseMirror ul,
+.rich-editor .ProseMirror ol {
+  padding-left: 1.5em;
+}
+
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-editor .ProseMirror h2,
+.rich-editor .ProseMirror h3 {
+  margin: 0.5em 0;
+  font-size: 1.25em;
+  letter-spacing: normal;
+  line-height: 1.3;
+  color: inherit;
+  font-weight: 700;
+}
+
+.rich-text blockquote,
+.rich-editor .ProseMirror blockquote {
+  padding-left: 1em;
+  border-left: 3px solid var(--outline-strong);
+  opacity: 0.85;
+}
+
+.rich-text pre,
+.rich-editor .ProseMirror pre {
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  background: var(--card-bg);
+  overflow-x: auto;
+}
+
+.rich-text code,
+.rich-editor .ProseMirror code {
+  display: inline;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  background: var(--card-bg);
+}
+
+.rich-text pre code,
+.rich-editor .ProseMirror pre code {
+  padding: 0;
+}
+
+.rich-text a,
+.rich-editor .ProseMirror a {
+  color: var(--accent-fg);
+}
+
+.rich-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}

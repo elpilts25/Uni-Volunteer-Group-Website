@@ -5,6 +5,7 @@ import RegisterForm from './components/RegisterForm';
 import ForumLayout from './components/ForumLayout';
 import ForumHome from './components/ForumHome';
 import CategoryPage from './components/CategoryPage';
+import NewTopicPage from './components/NewTopicPage';
 import TopicPage from './components/TopicPage';
 import CalendarPage from './components/CalendarPage';
 import TasksPage from './components/TasksPage';
@@ -35,6 +36,7 @@ function App() {
                 <Route element={<ForumLayout onLogout={bump} />}>
                     <Route path="/" element={<ForumHome />} />
                     <Route path="/categories/:id" element={<CategoryPage />} />
+                    <Route path="/categories/:id/new" element={<NewTopicPage />} />
                     <Route path="/topics/:id" element={<TopicPage />} />
                     <Route element={<RequireRole roles={MEMBER_ROLES} />}>
                         <Route path="/calendar" element={<CalendarPage />} />

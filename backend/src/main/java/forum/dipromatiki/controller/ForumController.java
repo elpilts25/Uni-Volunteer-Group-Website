@@ -4,6 +4,8 @@ import forum.dipromatiki.dtos.CategoryRequest;
 import forum.dipromatiki.dtos.CategoryResponse;
 import forum.dipromatiki.dtos.PostRequest;
 import forum.dipromatiki.dtos.PostResponse;
+import forum.dipromatiki.dtos.ReactionRequest;
+import forum.dipromatiki.dtos.ReactionSummary;
 import forum.dipromatiki.dtos.StatsResponse;
 import forum.dipromatiki.dtos.TopicDetail;
 import forum.dipromatiki.dtos.TopicRequest;
@@ -37,6 +39,11 @@ public class ForumController {
         return forumService.listCategories(auth.getName(), roles(auth));
     }
 
+    @GetMapping("/categories/{id}")
+    public CategoryResponse getCategory(@PathVariable Long id, Authentication auth) {
+        return forumService.getCategory(id, auth.getName(), roles(auth));
+    }
+
     @PostMapping("/categories")
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(forumService.createCategory(request));
@@ -68,7 +75,19 @@ public class ForumController {
 
     @GetMapping("/topics/{id}")
     public TopicDetail getTopic(@PathVariable Long id, Authentication auth) {
-        return forumService.getTopic(id, roles(auth));
+        return forumService.getTopic(id, auth.getName(), roles(auth));
+    }
+
+    @PostMapping("/topics/{id}/reactions")
+    public List<ReactionSummary> reactToTopic(@PathVariable Long id, @Valid @RequestBody ReactionRequest request,
+                                              Authentication auth) {
+        return forumService.toggleTopicReaction(id, request, auth.getName(), roles(auth));
+    }
+
+    @PostMapping("/posts/{id}/reactions")
+    public List<ReactionSummary> reactToPost(@PathVariable Long id, @Valid @RequestBody ReactionRequest request,
+                                             Authentication auth) {
+        return forumService.togglePostReaction(id, request, auth.getName(), roles(auth));
     }
 
     @PostMapping("/topics/{id}/read")

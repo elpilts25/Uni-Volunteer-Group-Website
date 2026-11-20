@@ -180,6 +180,93 @@ class ForumControllerTests {
     }
 
     @Test
+    void formattedTopicContentIsSanitized() throws Exception {
+        long categoryId = createCategory("Formatted");
+        String html = "<p>Hi <strong>there</strong><script>alert(1)</script>"
+                + "<a href=\\\"javascript:alert(1)\\\" onclick=\\\"x()\\\">bad</a>"
+                + "<a href=\\\"https://example.com\\\">ok</a></p>";
+        String body = mockMvc().perform(post("/categories/" + categoryId + "/topics")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"T\",\"content\":\"" + html + "\"}"))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        long topicId = JsonMapper.builder().build().readTree(body).get("id").asLong();
+
+        String content = JsonMapper.builder().build().readTree(
+                        mockMvc().perform(get("/topics/" + topicId).with(user("alice").roles("USER")))
+                                .andExpect(status().isOk())
+                                .andReturn().getResponse().getContentAsString())
+                .get("content").asText();
+        org.junit.jupiter.api.Assertions.assertTrue(content.contains("<strong>there</strong>"));
+        org.junit.jupiter.api.Assertions.assertFalse(content.contains("script"));
+        org.junit.jupiter.api.Assertions.assertFalse(content.contains("javascript"));
+        org.junit.jupiter.api.Assertions.assertFalse(content.contains("onclick"));
+        org.junit.jupiter.api.Assertions.assertTrue(content.contains("href=\"https://example.com\""));
+    }
+
+    @Test
+    void emptyFormattedTopicContentIsRejected() throws Exception {
+        long categoryId = createCategory("EmptyFormatted");
+        mockMvc().perform(post("/categories/" + categoryId + "/topics")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"T\",\"content\":\"<p></p>\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void reactionsCanBeToggledOnTopicsAndPosts() throws Exception {
+        long categoryId = createCategory("Reactions");
+        String topicBody = mockMvc().perform(post("/categories/" + categoryId + "/topics")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"T\",\"content\":\"C\"}"))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        long topicId = JsonMapper.builder().build().readTree(topicBody).get("id").asLong();
+        String postBody = mockMvc().perform(post("/topics/" + topicId + "/posts")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"content\":\"<p>Reply <strong>bold</strong><script>x</script></p>\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.content").value("<p>Reply <strong>bold</strong></p>"))
+                .andReturn().getResponse().getContentAsString();
+        long postId = JsonMapper.builder().build().readTree(postBody).get("id").asLong();
+        String thumbsUp = "{\"emoji\":\"\\uD83D\\uDC4D\"}";
+
+        mockMvc().perform(post("/topics/" + topicId + "/reactions")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON).content(thumbsUp))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].count").value(1))
+                .andExpect(jsonPath("$[0].reacted").value(true))
+                .andExpect(jsonPath("$[0].users[0]").value("admin"));
+        mockMvc().perform(post("/posts/" + postId + "/reactions")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON).content(thumbsUp))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].count").value(1));
+
+        mockMvc().perform(get("/topics/" + topicId).with(user("admin").roles("ADMIN")))
+                .andExpect(jsonPath("$.reactions[0].count").value(1))
+                .andExpect(jsonPath("$.posts[0].reactions[0].reacted").value(true));
+        mockMvc().perform(get("/topics/" + topicId).with(user("alice").roles("USER")))
+                .andExpect(jsonPath("$.reactions[0].reacted").value(false));
+
+        mockMvc().perform(post("/topics/" + topicId + "/reactions")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON).content(thumbsUp))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+
+        mockMvc().perform(post("/topics/" + topicId + "/reactions")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"emoji\":\"x\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void deletingCategoryRemovesItsTopics() throws Exception {
         long categoryId = createCategory("Temporary");
         mockMvc().perform(post("/categories/" + categoryId + "/topics")
@@ -213,6 +300,11 @@ class ForumControllerTests {
         mockMvc().perform(get("/categories").with(user("carol").roles("FULL_MEMBER")))
                 .andExpect(jsonPath("$[?(@.id==" + categoryId + ")]").isEmpty());
 
+        mockMvc().perform(get("/categories/" + categoryId).with(user("carol").roles("FULL_MEMBER")))
+                .andExpect(status().isForbidden());
+        mockMvc().perform(get("/categories/" + categoryId).with(user("bob").roles("BOARD")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Board only"));
         mockMvc().perform(get("/categories/" + categoryId + "/topics").with(user("carol").roles("FULL_MEMBER")))
                 .andExpect(status().isForbidden());
         mockMvc().perform(post("/categories/" + categoryId + "/topics")

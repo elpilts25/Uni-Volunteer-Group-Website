@@ -1,68 +1,15 @@
 import { useEffect, useState } from 'react';
-import {
-    Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, TextField, Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Chip, Paper, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChatBubbleOutlined from '@mui/icons-material/ChatBubbleOutlined';
 import PeopleOutlined from '@mui/icons-material/PeopleOutlined';
-import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../axiosConfig';
 import useUsername from '../hooks/useUsername';
 import { translate, useTranslations } from '../i18n/i18n';
 import { cardSx, colorBase } from '../theme';
 import timeAgo from '../utils/timeAgo';
-
-function NewTopicDialog({ categoryId, onClose, onCreated }) {
-    const { t } = useTranslations('newTopicDialog');
-    const { t: tc } = useTranslations('common');
-    const [form, setForm] = useState({ title: '', content: '' });
-    const [error, setError] = useState('');
-
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        try {
-            const res = await api.post(`/categories/${categoryId}/topics`, form);
-            onCreated(res.data);
-        } catch (err) {
-            setError(err.response?.data?.error ?? tc('serverError'));
-        }
-    };
-
-    return (
-        <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
-            <Box component="form" onSubmit={handleSubmit}>
-                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {t('title')}
-                    <IconButton size="small" onClick={onClose} aria-label={tc('close')}>
-                        <CloseIcon fontSize="small" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent sx={{ display: 'grid', gap: 2, pt: '8px !important' }}>
-                    <TextField
-                        label={t('topicTitle')} name="title" required autoFocus fullWidth
-                        placeholder={t('topicTitlePlaceholder')}
-                        value={form.title} onChange={handleChange}
-                    />
-                    <TextField
-                        label={t('message')} name="content" required fullWidth multiline minRows={4}
-                        placeholder={t('messagePlaceholder')}
-                        value={form.content} onChange={handleChange}
-                    />
-                    {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
-                </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
-                    <Button onClick={onClose} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
-                    <Button type="submit" variant="contained" sx={{ textTransform: 'none' }}>{t('publish')}</Button>
-                </DialogActions>
-            </Box>
-        </Dialog>
-    );
-}
 
 function CategoryPage() {
     const { t } = useTranslations('categoryPage');
@@ -73,14 +20,13 @@ function CategoryPage() {
     const [category, setCategory] = useState(null);
     const [topics, setTopics] = useState([]);
     const [error, setError] = useState('');
-    const [creating, setCreating] = useState(false);
 
     useEffect(() => {
         let active = true;
-        Promise.all([api.get('/categories'), api.get(`/categories/${id}/topics`)])
-            .then(([cats, list]) => {
+        Promise.all([api.get(`/categories/${id}`), api.get(`/categories/${id}/topics`)])
+            .then(([cat, list]) => {
                 if (!active) return;
-                setCategory(cats.data.find((c) => String(c.id) === id) ?? null);
+                setCategory(cat.data);
                 setTopics(list.data);
                 setError('');
             })
@@ -114,7 +60,7 @@ function CategoryPage() {
                     </Box>
                     {category && (
                         <Button variant="contained" startIcon={<AddIcon />} sx={{ textTransform: 'none' }}
-                                onClick={() => setCreating(true)}>
+                                onClick={() => navigate(`/categories/${id}/new`)}>
                             {t('newTopic')}
                         </Button>
                     )}
@@ -165,14 +111,6 @@ function CategoryPage() {
                     </Paper>
                 ))}
             </Box>
-
-            {creating && (
-                <NewTopicDialog
-                    categoryId={id}
-                    onClose={() => setCreating(false)}
-                    onCreated={(topic) => navigate(`/topics/${topic.id}`)}
-                />
-            )}
         </Box>
     );
 }

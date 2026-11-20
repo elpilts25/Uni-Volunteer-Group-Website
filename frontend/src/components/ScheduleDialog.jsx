@@ -2,10 +2,11 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     Alert, Box, Button, Dialog, DialogActions, DialogContent, TextField, ToggleButton,
-    ToggleButtonGroup, Typography,
+    ToggleButtonGroup,
 } from '@mui/material';
 import api from '../axiosConfig';
 import { useTranslations } from '../i18n/i18n';
+import { DialogField, DialogHeader } from './DialogParts';
 
 const longDate = (iso, locale) =>
     new Date(`${iso}T00:00:00`)
@@ -36,50 +37,50 @@ function ScheduleDialog({ date, onClose, onSaved }) {
     return (
         <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
             <Box component="form" onSubmit={handleSubmit}>
-                <Box sx={{ px: 3, pt: 3, pb: 2 }}>
-                    <Typography variant="caption" color="primary" sx={{ letterSpacing: 1 }}>
-                        {form.date ? longDate(form.date, locale) : t('newEvent')}
-                    </Typography>
-                    <Typography variant="h6" fontWeight="bold">{t('heading')}</Typography>
-                </Box>
-                <DialogContent sx={{ display: 'grid', gap: 2 }}>
-                    <TextField
-                        label={t('title')} name="title" required autoFocus fullWidth
-                        placeholder={t('titlePlaceholder')}
-                        value={form.title} onChange={handleChange}
-                        slotProps={{ inputLabel: { shrink: true } }}
-                    />
-                    <Box>
-                        <Typography variant="caption" color="text.secondary">{t('type')}</Typography>
+                <DialogHeader
+                    title={t('heading')} onClose={onClose}
+                    eyebrow={form.date ? longDate(form.date, locale) : t('newEvent')}
+                />
+                <DialogContent sx={{ display: 'grid', gap: 2.5, pt: '8px !important' }}>
+                    <DialogField label={t('title')} id="event-title">
+                        <TextField
+                            id="event-title" name="title" required autoFocus fullWidth
+                            placeholder={t('titlePlaceholder')}
+                            value={form.title} onChange={handleChange}
+                        />
+                    </DialogField>
+                    <DialogField label={t('type')} id="event-type">
                         <ToggleButtonGroup
-                            exclusive fullWidth size="small" color="primary" value={form.type}
+                            id="event-type" exclusive fullWidth size="small" color="primary" value={form.type}
                             onChange={(_, value) => value && setForm({ ...form, type: value })}
-                            sx={{ mt: 0.5 }}
                         >
                             <ToggleButton value="MEETING" sx={{ textTransform: 'none' }}>{te('MEETING')}</ToggleButton>
                             <ToggleButton value="EVENT" sx={{ textTransform: 'none' }}>{te('EVENT')}</ToggleButton>
                         </ToggleButtonGroup>
-                    </Box>
+                    </DialogField>
                     <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
-                        <TextField
-                            label={t('date')} name="date" type="date" required
-                            value={form.date} onChange={handleChange}
-                            slotProps={{ inputLabel: { shrink: true } }}
-                        />
-                        <TextField
-                            label={t('time')} name="time" type="time" required
-                            value={form.time} onChange={handleChange}
-                            slotProps={{ inputLabel: { shrink: true } }}
-                        />
+                        <DialogField label={t('date')} id="event-date">
+                            <TextField
+                                id="event-date" name="date" type="date" required fullWidth
+                                value={form.date} onChange={handleChange}
+                            />
+                        </DialogField>
+                        <DialogField label={t('time')} id="event-time">
+                            <TextField
+                                id="event-time" name="time" type="time" required fullWidth
+                                value={form.time} onChange={handleChange}
+                            />
+                        </DialogField>
                     </Box>
-                    <TextField
-                        label={t('location')} name="location" fullWidth placeholder={t('locationPlaceholder')}
-                        value={form.location} onChange={handleChange}
-                        slotProps={{ inputLabel: { shrink: true } }}
-                    />
+                    <DialogField label={t('location')} id="event-location">
+                        <TextField
+                            id="event-location" name="location" fullWidth placeholder={t('locationPlaceholder')}
+                            value={form.location} onChange={handleChange}
+                        />
+                    </DialogField>
                     {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions>
                     <Button onClick={onClose} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
                     <Button type="submit" variant="contained" sx={{ textTransform: 'none' }}>
                         {t('submit')}

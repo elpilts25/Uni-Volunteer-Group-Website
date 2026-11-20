@@ -108,13 +108,24 @@
   "categoryDialog": {
     "newTitle": "New category",
     "editTitle": "Edit category",
-    "name": "Name",
+    "name": "Category name",
     "description": "Description",
     "icon": "Icon",
-    "access": "Access",
-    "allMembers": "All members",
-    "accessAll": "Select roles to restrict the category to them.",
-    "accessRestricted": "Only the selected roles (and admins) can see this category."
+    "access": "Access permission",
+    "allMembers": "All members"
+  },
+  "richText": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "bulletList": "Bulleted list",
+    "orderedList": "Numbered list",
+    "quote": "Quote",
+    "link": "Link",
+    "undo": "Undo",
+    "redo": "Redo",
+    "linkPrompt": "Link address (leave empty to remove)"
   },
   "categoryPage": {
     "back": "Back to home",
@@ -129,12 +140,15 @@
     "topicTitlePlaceholder": "e.g. Activity schedule",
     "message": "Content",
     "messagePlaceholder": "Write the first post...",
-    "publish": "Publish"
+    "publish": "Publish",
+    "contentRequired": "Please write the content of the discussion"
   },
   "topicPage": {
     "loadError": "Unable to load the discussion",
     "sendError": "Sending failed",
     "saveError": "Saving failed",
+    "reactionError": "The reaction could not be saved",
+    "addReaction": "Add reaction",
     "deleteError": "Deletion failed",
     "backTo": "Back to {name}",
     "breadcrumb": "Discussions",

@@ -11,5 +11,6 @@ public record TopicDetail(
         String content,
         String author,
         Instant createdAt,
-        List<PostResponse> posts
+        List<PostResponse> posts,
+        List<ReactionSummary> reactions
 ) {}

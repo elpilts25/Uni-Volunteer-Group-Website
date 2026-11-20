@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-    Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText,
     IconButton, Paper, Tooltip, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -20,6 +20,7 @@ import { hasRole, MEMBER_ROLES } from '../utils/roles';
 import timeAgo from '../utils/timeAgo';
 import usefulLinks from '../utils/usefulLinks';
 import CategoryDialog from './CategoryDialog';
+import { DialogHeader } from './DialogParts';
 
 const gridSx = (min) => ({
     display: 'grid',
@@ -250,13 +251,13 @@ function ForumHome() {
             )}
 
             <Dialog open={Boolean(toDelete)} onClose={() => setToDelete(null)} maxWidth="xs" fullWidth>
-                <DialogTitle>{t('deleteTitle')}</DialogTitle>
+                <DialogHeader title={t('deleteTitle')} onClose={() => setToDelete(null)} />
                 <DialogContent>
                     <DialogContentText>
                         {t('deleteConfirm', { name: toDelete?.name })}
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions>
                     <Button onClick={() => setToDelete(null)} sx={{ textTransform: 'none' }}>{tc('cancel')}</Button>
                     <Button color="error" variant="contained" onClick={handleDelete} sx={{ textTransform: 'none' }}>
                         {tc('delete')}

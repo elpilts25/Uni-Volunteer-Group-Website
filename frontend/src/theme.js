@@ -22,6 +22,14 @@ export const cardSx = {
     borderRadius: 2,
 };
 
+// Tinted, rounded inputs used inside dialogs and on full-page forms.
+export const fieldSx = {
+    '& .MuiOutlinedInput-root': {
+        backgroundColor: 'var(--card-alt)', borderRadius: 3,
+        '& fieldset': { borderColor: 'var(--outline-strong)' },
+    },
+};
+
 export const buildTheme = (mode) => createTheme({
     palette: {
         mode,
@@ -32,6 +40,36 @@ export const buildTheme = (mode) => createTheme({
     },
     shape: { borderRadius: 8 },
     components: {
+        // Every dialog and dropdown shares the slate card surface.
+        MuiDialog: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: 'var(--card-bg)', backgroundImage: 'none',
+                    border: '1px solid var(--outline)', borderRadius: 16,
+                },
+                root: fieldSx,
+            },
+        },
+        MuiDialogTitle: { styleOverrides: { root: { fontWeight: 700 } } },
+        // Keeps an icon and its text on one line in the closed dropdown.
+        MuiSelect: { styleOverrides: { select: { display: 'flex', alignItems: 'center', gap: 12 } } },
+        MuiDialogActions: { styleOverrides: { root: { padding: '8px 24px 20px' } } },
+        MuiPopover: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: 'var(--card-bg)', backgroundImage: 'none',
+                    border: '1px solid var(--outline-strong)', borderRadius: 12, marginTop: 4,
+                },
+            },
+        },
+        MuiMenuItem: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-selected': { backgroundColor: 'transparent', fontWeight: 600 },
+                    '&.Mui-selected:hover': { backgroundColor: 'var(--card-hover)' },
+                },
+            },
+        },
         MuiOutlinedInput: {
             styleOverrides: {
                 root: mode === 'dark'
