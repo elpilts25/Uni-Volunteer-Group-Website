@@ -105,7 +105,14 @@ function CalendarPage() {
     const canDelete = (event) => isAdmin || (canEdit && event.createdBy === username);
 
     return (
-        <Box sx={{ display: 'grid', gap: 3 }}>
+        // Wider than the 1100px page container, but centered on it.
+        <Box
+            sx={{
+                display: 'grid', gap: 3,
+                width: 'min(1300px, 100vw - 64px)',
+                ml: 'calc(50% - min(650px, 50vw - 32px))',
+            }}
+        >
             <Box>
                 <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/')} sx={{ textTransform: 'none', mb: 1 }}>
                     {tc('backToForum')}
@@ -126,16 +133,21 @@ function CalendarPage() {
 
             {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
 
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 300px' }, alignItems: 'start' }}>
+            <Box
+                sx={{
+                    display: 'grid', gap: 2, alignItems: 'start',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 300px' },
+                }}
+            >
                 <Paper elevation={0} sx={{ ...cardSx, overflow: 'hidden' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
                         <IconButton size="small" aria-label={t('previousMonth')} onClick={() => shiftMonth(-1)}>
                             <ChevronLeft />
                         </IconButton>
                         <IconButton size="small" aria-label={t('nextMonth')} onClick={() => shiftMonth(1)}>
                             <ChevronRight />
                         </IconButton>
-                        <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
+                        <Typography variant="h5" fontWeight="bold" sx={{ flexGrow: 1 }}>
                             {monthLabel(cursor.year, cursor.month, locale)}
                         </Typography>
                         <TextField
@@ -154,8 +166,8 @@ function CalendarPage() {
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
                         {t('weekdays', { returnObjects: true }).map((d) => (
                             <Typography
-                                key={d} variant="caption" color="text.secondary"
-                                sx={{ p: 1, borderTop: '1px solid var(--outline-strong)', textTransform: 'uppercase', letterSpacing: 1 }}
+                                key={d} variant="body2" color="text.secondary"
+                                sx={{ p: 1.5, borderTop: '1px solid var(--outline-strong)', textTransform: 'uppercase', letterSpacing: 1 }}
                             >
                                 {d}
                             </Typography>
@@ -169,7 +181,7 @@ function CalendarPage() {
                                     key={iso}
                                     onClick={canEdit ? () => setScheduleDate(iso) : undefined}
                                     sx={{
-                                        minHeight: { xs: 72, sm: 96 }, p: 0.75, borderTop: '1px solid var(--outline-strong)',
+                                        minHeight: { xs: 88, sm: 136 }, p: 1, borderTop: '1px solid var(--outline-strong)',
                                         borderLeft: '1px solid var(--outline-strong)', minWidth: 0,
                                         '&:nth-of-type(7n + 1)': { borderLeft: 0 },
                                         opacity: inMonth ? 1 : 0.45,
@@ -178,9 +190,9 @@ function CalendarPage() {
                                     }}
                                 >
                                     <Typography
-                                        variant="caption" fontWeight={iso === todayIso ? 'bold' : 'normal'}
+                                        variant="body2" fontWeight={iso === todayIso ? 'bold' : 'normal'}
                                         sx={iso === todayIso
-                                            ? { bgcolor: colorBase, borderRadius: '50%', width: 22, height: 22,
+                                            ? { bgcolor: colorBase, color: '#fff', borderRadius: '50%', width: 28, height: 28,
                                                 display: 'inline-grid', placeItems: 'center' }
                                             : undefined}
                                     >
@@ -191,7 +203,7 @@ function CalendarPage() {
                                             <Typography
                                                 noWrap variant="caption" component="div"
                                                 sx={{
-                                                    mt: 0.5, px: 0.75, py: 0.25, borderRadius: 0.5, fontSize: 11,
+                                                    mt: 0.5, px: 0.75, py: 0.4, borderRadius: 0.5, fontSize: 12.5,
                                                     bgcolor: `${TYPES[e.type].color}44`,
                                                     borderLeft: `2px solid ${TYPES[e.type].color}`,
                                                 }}

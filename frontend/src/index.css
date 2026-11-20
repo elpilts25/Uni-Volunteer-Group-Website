@@ -11,6 +11,9 @@
   --accent-bg: #1b2a4a;
   --accent-fg: #4d8dff;
   --hero-end: #2a3140;
+  --icon-tile-bg: #3b3f7a;
+  --icon-tile-fg: #ffffff;
+  color-scheme: dark;
 }
 
 :root[data-theme='light'] {
@@ -24,6 +27,9 @@
   --accent-bg: #dbe6ff;
   --accent-fg: #2f5bff;
   --hero-end: #dbe4ff;
+  --icon-tile-bg: #e3eaff;
+  --icon-tile-fg: #3b4fd8;
+  color-scheme: light;
 }
 
 :root {
@@ -45,7 +51,6 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
   color: var(--text);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -92,7 +97,7 @@ h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
-  color: var(--text-h);
+  color: inherit;
 }
 
 h1 {

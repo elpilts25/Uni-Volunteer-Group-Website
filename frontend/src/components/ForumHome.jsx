@@ -182,7 +182,8 @@ function ForumHome() {
                                 >
                                     <Box
                                         sx={{
-                                            width: 40, height: 40, borderRadius: 2, bgcolor: '#3b3f7a', flexShrink: 0,
+                                            width: 40, height: 40, borderRadius: 2, flexShrink: 0,
+                                            bgcolor: 'var(--icon-tile-bg)', color: 'var(--icon-tile-fg)',
                                             display: 'grid', placeItems: 'center',
                                         }}
                                     >
