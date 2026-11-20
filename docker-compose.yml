@@ -31,3 +31,5 @@ services:
 
 volumes:
   postgres-data:
+    external: true
+    name: dipromatiki_dipromatiki-data
