@@ -110,7 +110,11 @@
     "editTitle": "Edit category",
     "name": "Name",
     "description": "Description",
-    "icon": "Icon"
+    "icon": "Icon",
+    "access": "Access",
+    "allMembers": "All members",
+    "accessAll": "Select roles to restrict the category to them.",
+    "accessRestricted": "Only the selected roles (and admins) can see this category."
   },
   "categoryPage": {
     "back": "Back to home",

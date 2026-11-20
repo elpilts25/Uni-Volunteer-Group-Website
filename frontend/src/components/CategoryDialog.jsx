@@ -1,22 +1,25 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField,
+    Alert, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, ListItemText, MenuItem, TextField,
 } from '@mui/material';
 import api from '../axiosConfig';
 import { useTranslations } from '../i18n/i18n';
 import { CategoryShape } from '../lib/interfaces';
 import { categoryIcons } from '../utils/categoryIcons';
+import { ROLES } from '../utils/roles';
 
 // Create (category === null) or edit a category; remount with a new `key` to reset the form.
 function CategoryDialog({ category, onClose, onSaved }) {
     const { t } = useTranslations('categoryDialog');
     const { t: tc } = useTranslations('common');
     const { t: ti } = useTranslations('categoryIcons');
+    const { t: tr } = useTranslations('membersPage.roles');
     const [form, setForm] = useState({
         name: category?.name ?? '',
         description: category?.description ?? '',
         icon: category?.icon ?? 'chat',
+        allowedRoles: category?.allowedRoles ?? [],
     });
     const [error, setError] = useState('');
 
@@ -54,6 +57,28 @@ function CategoryDialog({ category, onClose, onSaved }) {
                         {Object.entries(categoryIcons).map(([key, { Icon }]) => (
                             <MenuItem key={key} value={key} sx={{ gap: 1.5 }}>
                                 <Icon fontSize="small" /> {ti(key)}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        select label={t('access')} name="allowedRoles" fullWidth
+                        value={form.allowedRoles} onChange={handleChange}
+                        helperText={form.allowedRoles.length === 0 ? t('accessAll') : t('accessRestricted')}
+                        slotProps={{
+                            select: {
+                                multiple: true,
+                                displayEmpty: true,
+                                renderValue: (selected) => (selected.length === 0
+                                    ? t('allMembers')
+                                    : ROLES.filter((r) => selected.includes(r)).map((r) => tr(r)).join(', ')),
+                            },
+                            inputLabel: { shrink: true },
+                        }}
+                    >
+                        {ROLES.map((role) => (
+                            <MenuItem key={role} value={role}>
+                                <Checkbox size="small" checked={form.allowedRoles.includes(role)} />
+                                <ListItemText primary={tr(role)} />
                             </MenuItem>
                         ))}
                     </TextField>

@@ -19,6 +19,7 @@ import forum.dipromatiki.repositories.TopicReadRepository;
 import forum.dipromatiki.repositories.TopicRepository;
 import forum.dipromatiki.repositories.UserRepository;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -47,9 +48,12 @@ public class ForumService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> listCategories(String username) {
+    public List<CategoryResponse> listCategories(String username, Collection<String> roles) {
         User viewer = viewer(username);
-        return categories.findAll().stream().map(c -> toResponse(c, viewer)).toList();
+        return categories.findAll().stream()
+                .filter(c -> canAccess(c, roles))
+                .map(c -> toResponse(c, viewer))
+                .toList();
     }
 
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -58,6 +62,7 @@ public class ForumService {
             throw new IllegalArgumentException("Υπάρχει ήδη κατηγορία με αυτό το όνομα");
         }
         Category category = new Category(name, clean(request.description()), iconOrDefault(request.icon()));
+        category.setAllowedRoles(request.allowedRoles());
         return toResponse(categories.save(category), null);
     }
 
@@ -70,6 +75,7 @@ public class ForumService {
         category.setName(name);
         category.setDescription(clean(request.description()));
         category.setIcon(iconOrDefault(request.icon()));
+        category.setAllowedRoles(request.allowedRoles());
         return toResponse(category, null);
     }
 
@@ -78,24 +84,26 @@ public class ForumService {
     }
 
     @Transactional(readOnly = true)
-    public List<TopicSummary> listTopics(Long categoryId, String username) {
-        findCategory(categoryId);
+    public List<TopicSummary> listTopics(Long categoryId, String username, Collection<String> roles) {
+        requireAccess(findCategory(categoryId), roles);
         User viewer = viewer(username);
         return topics.findByCategoryIdOrderByCreatedAtDesc(categoryId).stream()
                 .map(t -> toSummary(t, viewer))
                 .toList();
     }
 
-    public TopicSummary createTopic(Long categoryId, TopicRequest request, String username) {
+    public TopicSummary createTopic(Long categoryId, TopicRequest request, String username, Collection<String> roles) {
         Category category = findCategory(categoryId);
+        requireAccess(category, roles);
         Topic topic = topics.save(new Topic(
                 request.title().trim(), request.content().trim(), findUser(username), category));
         return toSummary(topic, null);
     }
 
     @Transactional(readOnly = true)
-    public TopicDetail getTopic(Long id) {
+    public TopicDetail getTopic(Long id, Collection<String> roles) {
         Topic topic = findTopic(id);
+        requireAccess(topic.getCategory(), roles);
         List<PostResponse> replies = posts.findByTopicIdOrderByCreatedAtAsc(id).stream()
                 .map(this::toResponse)
                 .toList();
@@ -105,8 +113,9 @@ public class ForumService {
                 topic.getCreatedAt(), replies);
     }
 
-    public PostResponse createPost(Long topicId, PostRequest request, String username) {
+    public PostResponse createPost(Long topicId, PostRequest request, String username, Collection<String> roles) {
         Topic topic = findTopic(topicId);
+        requireAccess(topic.getCategory(), roles);
         return toResponse(posts.save(new Post(request.content().trim(), findUser(username), topic)));
     }
 
@@ -167,7 +176,8 @@ public class ForumService {
                 + posts.countUnreadInCategory(viewer.getId(), readBaseline(viewer), category.getId());
         return new CategoryResponse(
                 category.getId(), category.getName(), category.getDescription(), category.getIcon(),
-                topics.countByCategoryId(category.getId()), latest(lastTopic, lastPost), unread);
+                topics.countByCategoryId(category.getId()), latest(lastTopic, lastPost), unread,
+                category.getAllowedRoles());
     }
 
     private TopicSummary toSummary(Topic topic, User viewer) {
@@ -179,6 +189,17 @@ public class ForumService {
         return new TopicSummary(
                 topic.getId(), topic.getTitle(), topic.getAuthor().getUsername(), topic.getCreatedAt(),
                 posts.countByTopicId(topic.getId()), latest(topic.getCreatedAt(), lastPost), unread);
+    }
+
+    // Admins always see every category so they can manage the access lists.
+    private static boolean canAccess(Category category, Collection<String> roles) {
+        return roles.contains("ADMIN") || category.isVisibleTo(roles);
+    }
+
+    private static void requireAccess(Category category, Collection<String> roles) {
+        if (!canAccess(category, roles)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Δεν έχεις πρόσβαση σε αυτή την κατηγορία");
+        }
     }
 
     private User viewer(String username) {

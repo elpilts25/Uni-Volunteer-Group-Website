@@ -7,6 +7,7 @@ export const CategoryShape = PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     icon: PropTypes.string,
+    allowedRoles: PropTypes.arrayOf(PropTypes.string),
 });
 
 export const AssigneeShape = PropTypes.shape({

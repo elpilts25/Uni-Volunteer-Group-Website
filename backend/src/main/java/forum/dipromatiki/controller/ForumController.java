@@ -33,8 +33,8 @@ public class ForumController {
     }
 
     @GetMapping("/categories")
-    public List<CategoryResponse> listCategories(Principal principal) {
-        return forumService.listCategories(principal.getName());
+    public List<CategoryResponse> listCategories(Authentication auth) {
+        return forumService.listCategories(auth.getName(), roles(auth));
     }
 
     @PostMapping("/categories")
@@ -54,21 +54,21 @@ public class ForumController {
     }
 
     @GetMapping("/categories/{id}/topics")
-    public List<TopicSummary> listTopics(@PathVariable Long id, Principal principal) {
-        return forumService.listTopics(id, principal.getName());
+    public List<TopicSummary> listTopics(@PathVariable Long id, Authentication auth) {
+        return forumService.listTopics(id, auth.getName(), roles(auth));
     }
 
     @PostMapping("/categories/{id}/topics")
     public ResponseEntity<TopicSummary> createTopic(@PathVariable Long id,
                                                     @Valid @RequestBody TopicRequest request,
-                                                    Principal principal) {
+                                                    Authentication auth) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(forumService.createTopic(id, request, principal.getName()));
+                .body(forumService.createTopic(id, request, auth.getName(), roles(auth)));
     }
 
     @GetMapping("/topics/{id}")
-    public TopicDetail getTopic(@PathVariable Long id) {
-        return forumService.getTopic(id);
+    public TopicDetail getTopic(@PathVariable Long id, Authentication auth) {
+        return forumService.getTopic(id, roles(auth));
     }
 
     @PostMapping("/topics/{id}/read")
@@ -109,11 +109,15 @@ public class ForumController {
         return auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
+    private static List<String> roles(Authentication auth) {
+        return auth.getAuthorities().stream().map(a -> a.getAuthority().replaceFirst("^ROLE_", "")).toList();
+    }
+
     @PostMapping("/topics/{id}/posts")
     public ResponseEntity<PostResponse> createPost(@PathVariable Long id,
                                                    @Valid @RequestBody PostRequest request,
-                                                   Principal principal) {
+                                                   Authentication auth) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(forumService.createPost(id, request, principal.getName()));
+                .body(forumService.createPost(id, request, auth.getName(), roles(auth)));
     }
 }

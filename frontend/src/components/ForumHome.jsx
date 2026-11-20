@@ -10,6 +10,7 @@ import ForumOutlined from '@mui/icons-material/ForumOutlined';
 import PeopleOutlined from '@mui/icons-material/PeopleOutlined';
 import ChatBubbleOutlined from '@mui/icons-material/ChatBubbleOutlined';
 import PublicOutlined from '@mui/icons-material/PublicOutlined';
+import LockOutlined from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
 import { translate, useTranslations } from '../i18n/i18n';
@@ -49,6 +50,7 @@ function ForumHome() {
     const { t } = useTranslations('forumHome');
     const { t: tc } = useTranslations('common');
     const { t: tl } = useTranslations('usefulLinks');
+    const { t: tr } = useTranslations('membersPage.roles');
     const [categories, setCategories] = useState([]);
     const [stats, setStats] = useState(null);
     const [error, setError] = useState('');
@@ -208,7 +210,12 @@ function ForumHome() {
                                             variant="caption" color="primary" component="div"
                                             sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}
                                         >
-                                            <PublicOutlined sx={{ fontSize: 12 }} /> {t('allMembers')}
+                                            {category.allowedRoles?.length > 0
+                                                ? <LockOutlined sx={{ fontSize: 12 }} />
+                                                : <PublicOutlined sx={{ fontSize: 12 }} />}
+                                            {category.allowedRoles?.length > 0
+                                                ? category.allowedRoles.map((r) => tr(r)).join(', ')
+                                                : t('allMembers')}
                                         </Typography>
                                     </Box>
                                 </Box>

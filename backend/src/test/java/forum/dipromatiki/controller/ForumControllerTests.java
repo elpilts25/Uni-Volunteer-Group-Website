@@ -194,4 +194,33 @@ class ForumControllerTests {
         mockMvc().perform(get("/categories/" + categoryId + "/topics").with(user("alice").roles("USER")))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void restrictedCategoryIsOnlyVisibleToItsRoles() throws Exception {
+        String body = mockMvc().perform(post("/categories")
+                        .with(user("admin").roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Board only\",\"allowedRoles\":[\"BOARD\"]}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.allowedRoles[0]").value("BOARD"))
+                .andReturn().getResponse().getContentAsString();
+        long categoryId = JsonMapper.builder().build().readTree(body).get("id").asLong();
+
+        mockMvc().perform(get("/categories").with(user("bob").roles("BOARD")))
+                .andExpect(jsonPath("$[?(@.id==" + categoryId + ")]").isNotEmpty());
+        mockMvc().perform(get("/categories").with(user("admin").roles("ADMIN")))
+                .andExpect(jsonPath("$[?(@.id==" + categoryId + ")]").isNotEmpty());
+        mockMvc().perform(get("/categories").with(user("carol").roles("FULL_MEMBER")))
+                .andExpect(jsonPath("$[?(@.id==" + categoryId + ")]").isEmpty());
+
+        mockMvc().perform(get("/categories/" + categoryId + "/topics").with(user("carol").roles("FULL_MEMBER")))
+                .andExpect(status().isForbidden());
+        mockMvc().perform(post("/categories/" + categoryId + "/topics")
+                        .with(user("carol").roles("FULL_MEMBER"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"T\",\"content\":\"C\"}"))
+                .andExpect(status().isForbidden());
+        mockMvc().perform(get("/categories/" + categoryId + "/topics").with(user("bob").roles("BOARD")))
+                .andExpect(status().isOk());
+    }
 }

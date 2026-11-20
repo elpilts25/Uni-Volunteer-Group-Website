@@ -1,6 +1,7 @@
 package forum.dipromatiki.dtos;
 
 import java.time.Instant;
+import java.util.List;
 
 public record CategoryResponse(
         Long id,
@@ -9,5 +10,6 @@ public record CategoryResponse(
         String icon,
         long topicCount,
         Instant lastActivity,
-        long unreadCount
+        long unreadCount,
+        List<String> allowedRoles
 ) {}

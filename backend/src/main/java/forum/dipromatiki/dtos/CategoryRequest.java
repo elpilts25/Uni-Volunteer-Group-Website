@@ -3,6 +3,7 @@ package forum.dipromatiki.dtos;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public record CategoryRequest(
         @NotBlank(message = "Το όνομα της κατηγορίας είναι υποχρεωτικό")
@@ -13,5 +14,8 @@ public record CategoryRequest(
         String description,
 
         @Pattern(regexp = "^[a-z]{1,20}$", message = "Μη έγκυρο εικονίδιο")
-        String icon
+        String icon,
+
+        // Empty or missing means every member can see the category.
+        List<String> allowedRoles
 ) {}
