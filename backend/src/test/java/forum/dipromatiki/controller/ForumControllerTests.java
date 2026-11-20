@@ -165,9 +165,17 @@ class ForumControllerTests {
                 .andExpect(jsonPath("$[?(@.id==" + categoryId + ")].unreadCount").value(1));
         mockMvc().perform(get("/stats").with(user("readerone").roles("FULL_MEMBER")))
                 .andExpect(jsonPath("$.newMessages").value(org.hamcrest.Matchers.greaterThanOrEqualTo(1)));
+        mockMvc().perform(get("/topics/unread").with(user("readerone").roles("FULL_MEMBER")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.id==" + topicId + ")].categoryName").value("Unread"))
+                .andExpect(jsonPath("$[?(@.id==" + topicId + ")].unread").value(1));
+        mockMvc().perform(get("/topics/unread").with(user("admin").roles("ADMIN")))
+                .andExpect(jsonPath("$[?(@.id==" + topicId + ")]").isEmpty());
 
         mockMvc().perform(post("/topics/" + topicId + "/read").with(user("readerone").roles("FULL_MEMBER")))
                 .andExpect(status().isNoContent());
+        mockMvc().perform(get("/topics/unread").with(user("readerone").roles("FULL_MEMBER")))
+                .andExpect(jsonPath("$[?(@.id==" + topicId + ")]").isEmpty());
         mockMvc().perform(get(topicsUrl).with(user("readerone").roles("FULL_MEMBER")))
                 .andExpect(jsonPath("$[0].unread").value(0));
 

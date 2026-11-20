@@ -10,6 +10,7 @@ import forum.dipromatiki.dtos.StatsResponse;
 import forum.dipromatiki.dtos.TopicDetail;
 import forum.dipromatiki.dtos.TopicRequest;
 import forum.dipromatiki.dtos.TopicSummary;
+import forum.dipromatiki.dtos.UnreadTopicSummary;
 import forum.dipromatiki.service.ForumService;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -30,8 +31,13 @@ public class ForumController {
     }
 
     @GetMapping("/stats")
-    public StatsResponse stats(Principal principal) {
-        return forumService.stats(principal.getName());
+    public StatsResponse stats(Authentication auth) {
+        return forumService.stats(auth.getName(), roles(auth));
+    }
+
+    @GetMapping("/topics/unread")
+    public List<UnreadTopicSummary> unreadTopics(Authentication auth) {
+        return forumService.unreadTopics(auth.getName(), roles(auth));
     }
 
     @GetMapping("/categories")

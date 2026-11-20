@@ -7,6 +7,7 @@ import ForumHome from './components/ForumHome';
 import CategoryPage from './components/CategoryPage';
 import NewTopicPage from './components/NewTopicPage';
 import TopicPage from './components/TopicPage';
+import UnreadPage from './components/UnreadPage';
 import CalendarPage from './components/CalendarPage';
 import TasksPage from './components/TasksPage';
 import MembersPage from './components/MembersPage';
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/categories/:id" element={<CategoryPage />} />
                     <Route path="/categories/:id/new" element={<NewTopicPage />} />
                     <Route path="/topics/:id" element={<TopicPage />} />
+                    <Route path="/unread" element={<UnreadPage />} />
                     <Route element={<RequireRole roles={MEMBER_ROLES} />}>
                         <Route path="/calendar" element={<CalendarPage />} />
                         <Route path="/tasks" element={<TasksPage />} />

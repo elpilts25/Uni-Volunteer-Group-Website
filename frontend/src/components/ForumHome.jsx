@@ -117,7 +117,7 @@ function ForumHome() {
                         to={hasRole(MEMBER_ROLES) ? '/members' : undefined}
                     />
                     <StatCard icon={ForumOutlined} label={t('topics')} value={stats.topics} />
-                    <StatCard icon={ChatBubbleOutlined} label={t('newMessages')} value={stats.newMessages} />
+                    <StatCard icon={ChatBubbleOutlined} label={t('newMessages')} value={stats.newMessages} to="/unread" />
                 </Box>
             )}
 

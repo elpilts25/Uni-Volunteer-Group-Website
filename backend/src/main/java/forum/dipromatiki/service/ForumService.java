@@ -10,6 +10,7 @@ import forum.dipromatiki.dtos.StatsResponse;
 import forum.dipromatiki.dtos.TopicDetail;
 import forum.dipromatiki.dtos.TopicRequest;
 import forum.dipromatiki.dtos.TopicSummary;
+import forum.dipromatiki.dtos.UnreadTopicSummary;
 import forum.dipromatiki.entity.Category;
 import forum.dipromatiki.entity.Post;
 import forum.dipromatiki.entity.Reaction;
@@ -24,6 +25,7 @@ import forum.dipromatiki.repositories.TopicRepository;
 import forum.dipromatiki.repositories.UserRepository;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -211,12 +213,26 @@ public class ForumService {
     }
 
     @Transactional(readOnly = true)
-    public StatsResponse stats(String username) {
-        User viewer = viewer(username);
-        long unread = viewer == null ? 0
-                : topics.countUnread(viewer.getId(), readBaseline(viewer))
-                + posts.countUnread(viewer.getId(), readBaseline(viewer));
+    public StatsResponse stats(String username, Collection<String> roles) {
+        long unread = unreadTopics(username, roles).stream().mapToLong(UnreadTopicSummary::unread).sum();
         return new StatsResponse(users.count(), topics.count(), unread);
+    }
+
+    // Newest activity first; only topics in categories the viewer may see.
+    @Transactional(readOnly = true)
+    public List<UnreadTopicSummary> unreadTopics(String username, Collection<String> roles) {
+        User viewer = viewer(username);
+        if (viewer == null) return List.of();
+        return topics.findUnread(viewer.getId(), readBaseline(viewer)).stream()
+                .filter(t -> canAccess(t.getCategory(), roles))
+                .map(t -> {
+                    TopicSummary s = toSummary(t, viewer);
+                    return new UnreadTopicSummary(
+                            s.id(), s.title(), s.author(), s.createdAt(), s.replyCount(), s.lastActivity(),
+                            s.unread(), t.getCategory().getId(), t.getCategory().getName());
+                })
+                .sorted(Comparator.comparing(UnreadTopicSummary::lastActivity).reversed())
+                .toList();
     }
 
     private CategoryResponse toResponse(Category category, User viewer) {

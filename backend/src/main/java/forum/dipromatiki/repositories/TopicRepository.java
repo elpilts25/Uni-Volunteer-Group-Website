@@ -31,4 +31,13 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
             + "and r.topic.id = t.id and r.lastReadAt >= t.createdAt)")
     long countUnreadById(@Param("userId") Long userId, @Param("since") Instant since,
                          @Param("topicId") Long topicId);
+
+    // Topics whose opening post or any reply is unread, by the same rules as the counts above.
+    @Query("select t from Topic t where (t.author.id <> :userId and t.createdAt > :since "
+            + "and not exists (select 1 from TopicRead r where r.user.id = :userId and r.topic.id = t.id "
+            + "and r.lastReadAt >= t.createdAt)) "
+            + "or exists (select 1 from Post p where p.topic.id = t.id and p.author.id <> :userId "
+            + "and p.createdAt > :since and not exists (select 1 from TopicRead r where r.user.id = :userId "
+            + "and r.topic.id = t.id and r.lastReadAt >= p.createdAt))")
+    List<Topic> findUnread(@Param("userId") Long userId, @Param("since") Instant since);
 }

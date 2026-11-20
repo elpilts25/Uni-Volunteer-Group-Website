@@ -127,6 +127,13 @@
     "redo": "Redo",
     "linkPrompt": "Link address (leave empty to remove)"
   },
+  "unreadPage": {
+    "back": "Back to home",
+    "title": "New messages",
+    "subtitle": "Discussions with messages you haven't read yet",
+    "empty": "You're all caught up. There are no unread discussions.",
+    "loadError": "Unable to load the unread discussions"
+  },
   "categoryPage": {
     "back": "Back to home",
     "newTopic": "New discussion",
