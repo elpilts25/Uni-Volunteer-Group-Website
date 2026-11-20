@@ -1,0 +1,280 @@
+{
+  "errorBoundary": {
+    "somethingWentWrong": "Κάτι πήγε στραβά",
+    "reload": "Επαναφόρτωση"
+  },
+  "common": {
+    "cancel": "Ακύρωση",
+    "save": "Αποθήκευση",
+    "edit": "Επεξεργασία",
+    "delete": "Διαγραφή",
+    "close": "Κλείσιμο",
+    "backToForum": "Πίσω στο forum",
+    "serverError": "Αδυναμία σύνδεσης με τον διακομιστή",
+    "you": "Εσύ"
+  },
+  "languageSwitcher": {
+    "label": "Γλώσσα",
+    "el": "EL",
+    "en": "EN"
+  },
+  "layout": {
+    "productName": "BEST Patras Forum",
+    "logout": "Αποσύνδεση",
+    "lightMode": "Φωτεινή λειτουργία",
+    "darkMode": "Σκοτεινή λειτουργία",
+    "footer": "© {year} BEST Patras - Board of European Students of Technology"
+  },
+  "authField": {
+    "showPassword": "Εμφάνιση κωδικού",
+    "hidePassword": "Απόκρυψη κωδικού"
+  },
+  "login": {
+    "title": "Καλώς Ήρθατε",
+    "subtitle": "Συνδεθείτε στον λογαριασμό σας",
+    "email": "Email",
+    "emailPlaceholder": "Email",
+    "password": "Κωδικός",
+    "passwordPlaceholder": "Κωδικός",
+    "submit": "Σύνδεση",
+    "noAccount": "Δεν έχετε λογαριασμό;",
+    "register": "Εγγραφή"
+  },
+  "register": {
+    "title": "Δημιουργία Λογαριασμού",
+    "subtitle": "Εγγραφείτε για να ξεκινήσετε",
+    "username": "Όνομα Χρήστη",
+    "usernamePlaceholder": "Όνομα Χρήστη",
+    "fullName": "Ονοματεπώνυμο",
+    "fullNamePlaceholder": "Ονοματεπώνυμο",
+    "email": "Email",
+    "emailPlaceholder": "Email",
+    "department": "Τμήμα Πανεπιστημίου",
+    "departmentPlaceholder": "Τμήμα",
+    "phone": "Τηλέφωνο",
+    "phonePlaceholder": "Τηλέφωνο",
+    "birthDate": "Ημερομηνία Γέννησης",
+    "password": "Κωδικός",
+    "passwordPlaceholder": "Κωδικός",
+    "confirmPassword": "Επιβεβαίωση Κωδικού",
+    "confirmPasswordPlaceholder": "Επιβεβαίωση Κωδικού",
+    "passwordMismatch": "Οι κωδικοί δεν ταιριάζουν",
+    "submit": "Εγγραφή",
+    "haveAccount": "Έχετε ήδη λογαριασμό;",
+    "login": "Σύνδεση",
+    "successTitle": "Επιτυχής Εγγραφή!",
+    "successMessage": "Ο λογαριασμός σας δημιουργήθηκε με επιτυχία.",
+    "goToLogin": "Μετάβαση στη Σύνδεση"
+  },
+  "usefulLinks": {
+    "guide": "Οδηγός Φόρουμ",
+    "calendar": "Ημερολόγιο",
+    "tasks": "Λίστα Εργασιών"
+  },
+  "categoryIcons": {
+    "chat": "Συζήτηση",
+    "home": "Αρχική",
+    "tag": "Γενικά",
+    "people": "Μέλη",
+    "work": "Ομάδες",
+    "public": "Εκδηλώσεις",
+    "event": "Συναντήσεις",
+    "school": "Εκπαίδευση"
+  },
+  "timeAgo": {
+    "noActivity": "Καμία δραστηριότητα",
+    "justNow": "μόλις τώρα"
+  },
+  "forumHome": {
+    "welcome": "Καλώς ήρθες στο Forum!",
+    "welcomeSubtitle": "Δες τις κατηγορίες και συμμετείχε στις συζητήσεις.",
+    "members": "Μέλη",
+    "topics": "Συζητήσεις",
+    "newMessages": "Νέα μηνύματα",
+    "unread": "{count} νέα",
+    "usefulLinks": "Χρήσιμα Links",
+    "categories": "Κατηγορίες Συζητήσεων",
+    "newCategory": "Νέα κατηγορία",
+    "loadError": "Αδυναμία φόρτωσης των κατηγοριών",
+    "deleteError": "Η διαγραφή απέτυχε",
+    "empty": "Δεν υπάρχουν κατηγορίες ακόμα.",
+    "emptyAdmin": "Δεν υπάρχουν κατηγορίες ακόμα. Δημιούργησε την πρώτη.",
+    "topicCount_one": "{count} θέμα",
+    "topicCount_other": "{count} θέματα",
+    "allMembers": "Όλα τα μέλη",
+    "deleteTitle": "Διαγραφή κατηγορίας",
+    "deleteConfirm": "Η κατηγορία «{name}» θα διαγραφεί μαζί με όλα τα θέματα και τις απαντήσεις της."
+  },
+  "categoryDialog": {
+    "newTitle": "Νέα κατηγορία",
+    "editTitle": "Επεξεργασία κατηγορίας",
+    "name": "Όνομα",
+    "description": "Περιγραφή",
+    "icon": "Εικονίδιο"
+  },
+  "categoryPage": {
+    "back": "Πίσω στην αρχική",
+    "newTopic": "Νέα συζήτηση",
+    "unread": "{count} νέα",
+    "loadError": "Αδυναμία φόρτωσης των συζητήσεων",
+    "empty": "Δεν υπάρχουν συζητήσεις ακόμα. Ξεκίνησε την πρώτη."
+  },
+  "newTopicDialog": {
+    "title": "Νέα συζήτηση",
+    "topicTitle": "Τίτλος συζήτησης",
+    "topicTitlePlaceholder": "π.χ. Πρόγραμμα δραστηριοτήτων",
+    "message": "Περιεχόμενο",
+    "messagePlaceholder": "Γράψε το πρώτο post...",
+    "publish": "Δημοσίευση"
+  },
+  "topicPage": {
+    "loadError": "Αδυναμία φόρτωσης της συζήτησης",
+    "sendError": "Η αποστολή απέτυχε",
+    "saveError": "Η αποθήκευση απέτυχε",
+    "deleteError": "Η διαγραφή απέτυχε",
+    "backTo": "Πίσω στο {name}",
+    "breadcrumb": "Συζητήσεις",
+    "initialPost": "Αρχικό post",
+    "replies": "Απαντήσεις",
+    "writeReply": "Γράψε μια απάντηση",
+    "replyPlaceholder": "Μοιράσου τη σκέψη σου...",
+    "reply": "Δημοσίευση απάντησης",
+    "editTopicTitle": "Επεξεργασία συζήτησης",
+    "editReplyTitle": "Επεξεργασία απάντησης",
+    "deleteTopicTitle": "Διαγραφή συζήτησης",
+    "deleteTopicConfirm": "Η συζήτηση θα διαγραφεί μαζί με όλες τις απαντήσεις της.",
+    "deleteReplyTitle": "Διαγραφή απάντησης",
+    "deleteReplyConfirm": "Η απάντηση θα διαγραφεί."
+  },
+  "membersPage": {
+    "title": "Μέλη",
+    "subtitle": "Όλοι οι χρήστες της εφαρμογής",
+    "back": "Πίσω στην αρχική",
+    "loadError": "Αδυναμία φόρτωσης των μελών",
+    "member": "Μέλος",
+    "role": "Ρόλοι",
+    "joined": "Εγγραφή",
+    "posts": "Δημοσιεύσεις",
+    "replies": "Απαντήσεις",
+    "unknownDate": "—",
+    "roles": {
+      "ADMIN": "Admin",
+      "BOARD": "Board",
+      "COORDINATOR": "Coordinator",
+      "PR_TEAM": "PR Team",
+      "DESIGN_TEAM": "Design Team",
+      "FR_TEAM": "FR Team",
+      "FULL_MEMBER": "Full Member",
+      "BABY_MEMBER": "Baby Member",
+      "OBSERVER": "Observer"
+    },
+    "roleError": "Η αλλαγή ρόλου απέτυχε",
+    "searchPlaceholder": "Αναζήτηση με όνομα ή username",
+    "sort": "Ταξινόμηση",
+    "sortNewest": "Πιο πρόσφατα",
+    "sortOldest": "Πιο παλιά",
+    "sortName": "Όνομα (Α-Ω)",
+    "sortActivity": "Περισσότερη δραστηριότητα",
+    "addRoles": "Προσθήκη ρόλων",
+    "empty": "Δεν βρέθηκαν μέλη",
+    "showing_one": "Προβολή {count} μέλους",
+    "showing_other": "Προβολή {count} μελών"
+  },
+  "eventTypes": {
+    "MEETING": "Συνάντηση",
+    "EVENT": "Εκδήλωση"
+  },
+  "calendar": {
+    "title": "Ημερολόγιο Συναντήσεων",
+    "subtitle": "Συναντήσεις και εκδηλώσεις",
+    "schedule": "Προγραμμάτισε",
+    "loadError": "Αδυναμία φόρτωσης του ημερολογίου",
+    "deleteError": "Η διαγραφή απέτυχε",
+    "previousMonth": "Προηγούμενος μήνας",
+    "nextMonth": "Επόμενος μήνας",
+    "selectMonth": "Επιλογή μήνα",
+    "weekdays": ["Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ", "Κυρ"],
+    "more": "+{count} ακόμα",
+    "thisMonth": "ΑΥΤΟΝ ΤΟΝ ΜΗΝΑ",
+    "upcoming": "Προσεχή Προγράμματα",
+    "noEvents": "Δεν υπάρχουν προγραμματισμένα γεγονότα αυτόν τον μήνα."
+  },
+  "scheduleDialog": {
+    "newEvent": "ΝΕΟ ΓΕΓΟΝΟΣ",
+    "heading": "Προγραμμάτισε κάτι",
+    "title": "Τίτλος",
+    "titlePlaceholder": "π.χ. Εβδομαδιαία Συνάντηση Μελών",
+    "type": "Τύπος",
+    "date": "Ημερομηνία",
+    "time": "Ώρα",
+    "location": "Τοποθεσία",
+    "locationPlaceholder": "Χώρος ή online link",
+    "submit": "Προσθήκη στο ημερολόγιο"
+  },
+  "taskMeta": {
+    "teams": {
+      "DESIGN": "DESIGN",
+      "PR": "PR",
+      "FR": "FR",
+      "BOARD": "BOARD"
+    },
+    "statuses": {
+      "AVAILABLE": { "label": "Διαθέσιμες", "hint": "Έτοιμες να αναληφθούν" },
+      "DOING": { "label": "Σε εξέλιξη", "hint": "Υπό εργασία" },
+      "FEEDBACK": { "label": "Σε αξιολόγηση", "hint": "Αναμένουν review" },
+      "DONE": { "label": "Ολοκληρωμένες", "hint": "Ολοκληρώθηκαν σε αυτόν τον κύκλο" }
+    },
+    "priorities": {
+      "LOW": "Χαμηλή",
+      "MEDIUM": "Μεσαία",
+      "HIGH": "Υψηλή"
+    }
+  },
+  "tasksPage": {
+    "title": "Λίστα Εργασιών",
+    "subtitle": "Διάλεξε μια εργασία, κράτα την ομάδα συντονισμένη και προχώρα τη δουλειά.",
+    "cycleProgress": "ΠΡΟΟΔΟΣ ΚΥΚΛΟΥ",
+    "newTask": "Νέα εργασία",
+    "searchPlaceholder": "Αναζήτηση εργασιών…",
+    "searchLabel": "Αναζήτηση εργασιών",
+    "allTeams": "ΟΛΕΣ",
+    "loadError": "Αδυναμία φόρτωσης των εργασιών",
+    "moveError": "Η μετακίνηση απέτυχε",
+    "noTasks": "Καμία εργασία"
+  },
+  "taskDialog": {
+    "loadError": "Αδυναμία φόρτωσης της εργασίας",
+    "actionError": "Η ενέργεια απέτυχε",
+    "deleteError": "Η διαγραφή απέτυχε",
+    "confirmDelete": "Να διαγραφεί η εργασία;",
+    "task": "ΕΡΓΑΣΙΑ {code}",
+    "createdBy": "Δημιουργήθηκε από {author}",
+    "description": "Περιγραφή",
+    "noDescription": "Δεν υπάρχει περιγραφή.",
+    "criteria": "Κριτήρια αποδοχής",
+    "discussion": "Συζήτηση",
+    "commentCount_one": "{count} σχόλιο",
+    "commentCount_other": "{count} σχόλια",
+    "commentPlaceholder": "Πρόσθεσε ένα σχόλιο…",
+    "comment": "Σχόλιο",
+    "info": "ΠΛΗΡΟΦΟΡΙΕΣ",
+    "status": "Κατάσταση",
+    "assignedTo": "Ανατέθηκε σε",
+    "nobody": "Κανείς ακόμα",
+    "release": "Αποδέσμευση",
+    "claim": "Ανάληψη",
+    "dueDate": "Προθεσμία",
+    "priority": "Προτεραιότητα",
+    "team": "Ομάδα"
+  },
+  "taskForm": {
+    "newTitle": "Νέα εργασία",
+    "editTitle": "Επεξεργασία εργασίας",
+    "title": "Τίτλος",
+    "description": "Περιγραφή",
+    "team": "Ομάδα",
+    "priority": "Προτεραιότητα",
+    "dueDate": "Προθεσμία",
+    "criteria": "Κριτήρια αποδοχής (ένα ανά γραμμή)"
+  }
+}

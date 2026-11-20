@@ -1,0 +1,280 @@
+{
+  "errorBoundary": {
+    "somethingWentWrong": "Something went wrong",
+    "reload": "Reload"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "backToForum": "Back to the forum",
+    "serverError": "Unable to connect to the server",
+    "you": "You"
+  },
+  "languageSwitcher": {
+    "label": "Language",
+    "el": "EL",
+    "en": "EN"
+  },
+  "layout": {
+    "productName": "BEST Patras Forum",
+    "logout": "Log out",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
+    "footer": "© {year} BEST Patras - Board of European Students of Technology"
+  },
+  "authField": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "login": {
+    "title": "Welcome",
+    "subtitle": "Sign in to your account",
+    "email": "Email",
+    "emailPlaceholder": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "submit": "Sign in",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Sign up to get started",
+    "username": "Username",
+    "usernamePlaceholder": "Username",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Full Name",
+    "email": "Email",
+    "emailPlaceholder": "Email",
+    "department": "University Department",
+    "departmentPlaceholder": "University Department",
+    "phone": "Phone",
+    "phonePlaceholder": "Phone",
+    "birthDate": "Date of Birth",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm Password",
+    "passwordMismatch": "Passwords do not match",
+    "submit": "Sign up",
+    "haveAccount": "Already have an account?",
+    "login": "Sign in",
+    "successTitle": "Registration Successful!",
+    "successMessage": "Your account was created successfully.",
+    "goToLogin": "Go to Sign In"
+  },
+  "usefulLinks": {
+    "guide": "Forum Guide",
+    "calendar": "Calendar",
+    "tasks": "Task List"
+  },
+  "categoryIcons": {
+    "chat": "Discussion",
+    "home": "Home",
+    "tag": "General",
+    "people": "Members",
+    "work": "Teams",
+    "public": "Events",
+    "event": "Meetings",
+    "school": "Education"
+  },
+  "timeAgo": {
+    "noActivity": "No activity",
+    "justNow": "just now"
+  },
+  "forumHome": {
+    "welcome": "Welcome to the Forum!",
+    "welcomeSubtitle": "Browse the categories and join the discussions.",
+    "members": "Members",
+    "topics": "Discussions",
+    "newMessages": "New messages",
+    "unread": "{count} new",
+    "usefulLinks": "Useful Links",
+    "categories": "Discussion Categories",
+    "newCategory": "New category",
+    "loadError": "Unable to load the categories",
+    "deleteError": "Deletion failed",
+    "empty": "There are no categories yet.",
+    "emptyAdmin": "There are no categories yet. Create the first one.",
+    "topicCount_one": "{count} topic",
+    "topicCount_other": "{count} topics",
+    "allMembers": "All members",
+    "deleteTitle": "Delete category",
+    "deleteConfirm": "The category “{name}” will be deleted together with all its topics and replies."
+  },
+  "categoryDialog": {
+    "newTitle": "New category",
+    "editTitle": "Edit category",
+    "name": "Name",
+    "description": "Description",
+    "icon": "Icon"
+  },
+  "categoryPage": {
+    "back": "Back to home",
+    "newTopic": "New discussion",
+    "unread": "{count} new",
+    "loadError": "Unable to load the discussions",
+    "empty": "There are no discussions yet. Start the first one."
+  },
+  "newTopicDialog": {
+    "title": "New discussion",
+    "topicTitle": "Discussion title",
+    "topicTitlePlaceholder": "e.g. Activity schedule",
+    "message": "Content",
+    "messagePlaceholder": "Write the first post...",
+    "publish": "Publish"
+  },
+  "topicPage": {
+    "loadError": "Unable to load the discussion",
+    "sendError": "Sending failed",
+    "saveError": "Saving failed",
+    "deleteError": "Deletion failed",
+    "backTo": "Back to {name}",
+    "breadcrumb": "Discussions",
+    "initialPost": "Initial post",
+    "replies": "Replies",
+    "writeReply": "Write a reply",
+    "replyPlaceholder": "Share your thoughts...",
+    "reply": "Post reply",
+    "editTopicTitle": "Edit discussion",
+    "editReplyTitle": "Edit reply",
+    "deleteTopicTitle": "Delete discussion",
+    "deleteTopicConfirm": "The discussion will be deleted together with all its replies.",
+    "deleteReplyTitle": "Delete reply",
+    "deleteReplyConfirm": "The reply will be deleted."
+  },
+  "membersPage": {
+    "title": "Members",
+    "subtitle": "Everyone who uses the app",
+    "back": "Back to home",
+    "loadError": "Unable to load the members",
+    "member": "Member",
+    "role": "Roles",
+    "joined": "Signed up",
+    "posts": "Posts",
+    "replies": "Replies",
+    "unknownDate": "—",
+    "roles": {
+      "ADMIN": "Admin",
+      "BOARD": "Board",
+      "COORDINATOR": "Coordinator",
+      "PR_TEAM": "PR Team",
+      "DESIGN_TEAM": "Design Team",
+      "FR_TEAM": "FR Team",
+      "FULL_MEMBER": "Full Member",
+      "BABY_MEMBER": "Baby Member",
+      "OBSERVER": "Observer"
+    },
+    "roleError": "Changing the role failed",
+    "searchPlaceholder": "Search by name or username",
+    "sort": "Sort",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "sortName": "Name (A-Z)",
+    "sortActivity": "Most active",
+    "addRoles": "Add roles",
+    "empty": "No members found",
+    "showing_one": "Showing {count} member",
+    "showing_other": "Showing {count} members"
+  },
+  "eventTypes": {
+    "MEETING": "Meeting",
+    "EVENT": "Event"
+  },
+  "calendar": {
+    "title": "Meeting Calendar",
+    "subtitle": "Meetings and events",
+    "schedule": "Schedule",
+    "loadError": "Unable to load the calendar",
+    "deleteError": "Deletion failed",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "selectMonth": "Select month",
+    "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "more": "+{count} more",
+    "thisMonth": "THIS MONTH",
+    "upcoming": "Upcoming Schedule",
+    "noEvents": "There are no scheduled events this month."
+  },
+  "scheduleDialog": {
+    "newEvent": "NEW EVENT",
+    "heading": "Schedule something",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Weekly Members Meeting",
+    "type": "Type",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "locationPlaceholder": "Venue or online link",
+    "submit": "Add to calendar"
+  },
+  "taskMeta": {
+    "teams": {
+      "DESIGN": "DESIGN",
+      "PR": "PR",
+      "FR": "FR",
+      "BOARD": "BOARD"
+    },
+    "statuses": {
+      "AVAILABLE": { "label": "Available", "hint": "Ready to be picked up" },
+      "DOING": { "label": "In progress", "hint": "Being worked on" },
+      "FEEDBACK": { "label": "In review", "hint": "Awaiting review" },
+      "DONE": { "label": "Completed", "hint": "Completed in this cycle" }
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High"
+    }
+  },
+  "tasksPage": {
+    "title": "Task List",
+    "subtitle": "Pick a task, keep the team in sync and move the work forward.",
+    "cycleProgress": "CYCLE PROGRESS",
+    "newTask": "New task",
+    "searchPlaceholder": "Search tasks…",
+    "searchLabel": "Search tasks",
+    "allTeams": "ALL",
+    "loadError": "Unable to load the tasks",
+    "moveError": "Moving the task failed",
+    "noTasks": "No tasks"
+  },
+  "taskDialog": {
+    "loadError": "Unable to load the task",
+    "actionError": "The action failed",
+    "deleteError": "Deletion failed",
+    "confirmDelete": "Delete this task?",
+    "task": "TASK {code}",
+    "createdBy": "Created by {author}",
+    "description": "Description",
+    "noDescription": "No description.",
+    "criteria": "Acceptance criteria",
+    "discussion": "Discussion",
+    "commentCount_one": "{count} comment",
+    "commentCount_other": "{count} comments",
+    "commentPlaceholder": "Add a comment…",
+    "comment": "Comment",
+    "info": "DETAILS",
+    "status": "Status",
+    "assignedTo": "Assigned to",
+    "nobody": "Nobody yet",
+    "release": "Unassign",
+    "claim": "Take on",
+    "dueDate": "Due date",
+    "priority": "Priority",
+    "team": "Team"
+  },
+  "taskForm": {
+    "newTitle": "New task",
+    "editTitle": "Edit task",
+    "title": "Title",
+    "description": "Description",
+    "team": "Team",
+    "priority": "Priority",
+    "dueDate": "Due date",
+    "criteria": "Acceptance criteria (one per line)"
+  }
+}

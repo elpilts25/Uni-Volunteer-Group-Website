@@ -1,0 +1,37 @@
+### Register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{"username":"alice","fullName":"Alice Papadopoulou","email":"alice@example.com","department":"Informatics","phone":"6912345678","birthDate":"2000-01-31","password":"secret123"}
+
+### Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{"email":"alice@example.com","password":"secret123"}
+
+### Me (replace TOKEN)
+GET http://localhost:8080/me
+Authorization: Bearer TOKEN
+
+### List users (admin token)
+GET http://localhost:8080/admin/users
+Authorization: Bearer ADMIN_TOKEN
+
+### Change a user's role: USER, MEMBER, BOARD or ADMIN (admin token)
+PUT http://localhost:8080/admin/users/2/role
+Authorization: Bearer ADMIN_TOKEN
+Content-Type: application/json
+
+{"role":"BOARD"}
+
+### Calendar events in a date range (MEMBER, BOARD or ADMIN)
+GET http://localhost:8080/calendar/events?from=2026-08-31&to=2026-10-04
+Authorization: Bearer TOKEN
+
+### Schedule an event (BOARD or ADMIN)
+POST http://localhost:8080/calendar/events
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{"title":"Weekly Members Meeting","type":"MEETING","date":"2026-09-07","time":"18:00","location":"Room 1"}
