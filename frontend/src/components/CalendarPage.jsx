@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-    Alert, Box, Button, IconButton, MenuItem, Paper, TextField, Tooltip, Typography,
+    Alert, Box, Button, Dialog, DialogActions, DialogContent, IconButton, MenuItem, Paper, TextField, Tooltip,
+    Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,6 +15,7 @@ import api from '../axiosConfig';
 import { translate, useTranslations } from '../i18n/i18n';
 import { cardSx, colorBase } from '../theme';
 import { MANAGER_ROLES, hasRole } from '../utils/roles';
+import { DialogHeader } from './DialogParts';
 import ScheduleDialog from './ScheduleDialog';
 
 const TYPES = {
@@ -47,6 +49,7 @@ function CalendarPage() {
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
     const [scheduleDate, setScheduleDate] = useState(null);
+    const [dayDate, setDayDate] = useState(null);
     const [version, setVersion] = useState(0); // bump to refetch after a change
     const canEdit = hasRole(MANAGER_ROLES);
     const isAdmin = hasRole(['ROLE_ADMIN']);
@@ -103,6 +106,12 @@ function CalendarPage() {
     };
 
     const canDelete = (event) => isAdmin || (canEdit && event.createdBy === username);
+
+    const handleDayClick = (iso, hasEvents) => {
+        if (hasEvents) setDayDate(iso);
+        else if (canEdit) setScheduleDate(iso);
+    };
+    const dayDialogEvents = dayDate ? eventsByDate[dayDate] ?? [] : [];
 
     return (
         // Wider than the 1100px page container, but centered on it.
@@ -179,14 +188,14 @@ function CalendarPage() {
                             return (
                                 <Box
                                     key={iso}
-                                    onClick={canEdit ? () => setScheduleDate(iso) : undefined}
+                                    onClick={() => handleDayClick(iso, dayEvents.length > 0)}
                                     sx={{
                                         minHeight: { xs: 88, sm: 136 }, p: 1, borderTop: '1px solid var(--outline-strong)',
                                         borderLeft: '1px solid var(--outline-strong)', minWidth: 0,
                                         '&:nth-of-type(7n + 1)': { borderLeft: 0 },
                                         opacity: inMonth ? 1 : 0.45,
-                                        cursor: canEdit ? 'pointer' : 'default',
-                                        '&:hover': canEdit ? { bgcolor: 'var(--card-hover)' } : undefined,
+                                        cursor: canEdit || dayEvents.length ? 'pointer' : 'default',
+                                        '&:hover': canEdit || dayEvents.length ? { bgcolor: 'var(--card-hover)' } : undefined,
                                     }}
                                 >
                                     <Typography
@@ -281,6 +290,66 @@ function CalendarPage() {
                     </Box>
                 </Paper>
             </Box>
+
+            {dayDate && (
+                <Dialog open onClose={() => setDayDate(null)} maxWidth="xs" fullWidth>
+                    <DialogHeader
+                        title={t('dayEvents')} onClose={() => setDayDate(null)}
+                        eyebrow={new Date(`${dayDate}T00:00:00`)
+                            .toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+                            .toLocaleUpperCase(locale)}
+                    />
+                    <DialogContent sx={{ display: 'grid', gap: 1.5, pt: '8px !important' }}>
+                        {dayDialogEvents.length === 0 && (
+                            <Typography variant="body2" color="text.secondary">{t('noEventsDay')}</Typography>
+                        )}
+                        {dayDialogEvents.map((e) => (
+                            <Box key={e.id} sx={{ p: 1.5, border: '1px solid var(--outline-strong)', borderRadius: 1, bgcolor: 'var(--card-alt)' }}>
+                                <Box sx={{ display: 'flex', gap: 1.5 }}>
+                                    <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{ px: 0.75, py: 0.25, borderRadius: 0.5, bgcolor: `${TYPES[e.type].color}44` }}
+                                        >
+                                            {te(e.type)}
+                                        </Typography>
+                                        <Typography fontWeight="bold" sx={{ mt: 0.5, overflowWrap: 'anywhere' }}>{e.title}</Typography>
+                                    </Box>
+                                    {canDelete(e) && (
+                                        <Tooltip title={tc('delete')}>
+                                            <IconButton size="small" aria-label={tc('delete')} onClick={() => handleDelete(e)}
+                                                        sx={{ alignSelf: 'start' }}>
+                                                <DeleteOutlined fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )}
+                                </Box>
+                                <Box sx={{ mt: 1, pt: 1, borderTop: '1px solid var(--outline-strong)', display: 'grid', gap: 0.5 }}>
+                                    <Typography variant="caption" color="text.secondary"
+                                                sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                                        <AccessTimeOutlined sx={{ fontSize: 14 }} /> {e.time.slice(0, 5)}
+                                    </Typography>
+                                    {e.location && (
+                                        <Typography variant="caption" color="text.secondary"
+                                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.75, overflowWrap: 'anywhere' }}>
+                                            <PlaceOutlined sx={{ fontSize: 14 }} /> {e.location}
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </Box>
+                        ))}
+                    </DialogContent>
+                    <DialogActions>
+                        {canEdit && (
+                            <Button startIcon={<AddIcon />} sx={{ textTransform: 'none' }}
+                                    onClick={() => { setScheduleDate(dayDate); setDayDate(null); }}>
+                                {t('addEvent')}
+                            </Button>
+                        )}
+                        <Button onClick={() => setDayDate(null)} sx={{ textTransform: 'none' }}>{tc('close')}</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
 
             {scheduleDate && (
                 <ScheduleDialog

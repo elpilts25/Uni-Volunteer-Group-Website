@@ -222,7 +222,10 @@
     "more": "+{count} more",
     "thisMonth": "THIS MONTH",
     "upcoming": "Upcoming Schedule",
-    "noEvents": "There are no scheduled events this month."
+    "noEvents": "There are no scheduled events this month.",
+    "dayEvents": "Scheduled events",
+    "noEventsDay": "There are no events on this day.",
+    "addEvent": "Add event"
   },
   "scheduleDialog": {
     "newEvent": "NEW EVENT",
